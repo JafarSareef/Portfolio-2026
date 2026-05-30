@@ -298,8 +298,9 @@ const verifiedCertificates = [
   {
     title: "Artificial Intelligence Internship",
     issuer: "Novitech",
-    image: "images/Artificial_Intelligence_Internship_Novitech.jpg",
-    link: "https://github.com/JafarSareef/Verified_Certificates/blob/main/Artificial_Intelligence_Internship_NoviTech.pdf",
+    image: "images/AI_Internship_NoviTech.jpg",
+    // 🎯 UPDATED TO THE RAW PREVIEW LINK BELOW
+    link: "https://github.com/JafarSareef/Verified_Certificates/raw/main/Artificial_Intelligence_Internship_NoviTech.pdf",
     summary:
       "Acquired real-world experience building baseline predictive engines, evaluating machine intelligence layers, and exploring data architectures.",
   },
