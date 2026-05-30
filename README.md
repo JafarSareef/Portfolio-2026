@@ -78,11 +78,5 @@ Simply open the `index.html` file directly in your preferred web browser, or lau
 * **Email:** [a.jafarsareef10@gmail.com]
 
 ```
-# Personal Portfolio & Digital Ecosystem (2026 Edition)
-
-
-
----
-
 
 
