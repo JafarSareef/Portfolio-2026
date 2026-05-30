@@ -625,3 +625,19 @@ if (menuBtn && mobileMenu) {
     });
   });
 }
+
+// ... Your existing portfolio project arrays, dark mode, or canvas code is up here ...
+
+// =========================================================================
+// 🚀 PASTE THIS EXACTLY ONE TIME AT THE VERY BOTTOM OF YOUR SCRIPT.JS FILE
+// =========================================================================
+document.addEventListener("click", (e) => {
+  const link = e.target.closest("a");
+  if (link && link.href) {
+    const isExternal = link.hostname !== window.location.hostname;
+    if (isExternal) {
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+    }
+  }
+});
