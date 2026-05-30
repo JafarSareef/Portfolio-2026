@@ -4,7 +4,7 @@
 
 Awarded **2nd Prize at the National Conference** for innovative system integration. This repository hosts my personal portfolio website—a responsive, high-performance digital hub designed to showcase my engineering projects, interactive data analytics dashboards, and full-stack automation pipelines.
 
-🔗 **Live Deployment:** [jafarsareef.github.io/Portfolio-2026](https://jafarsareef.github.io/Portfolio-2026/)
+🔗 **Live Deployment:** [https://jafarsareef.github.io/Portfolio-2026/](https://jafarsareef.github.io/Portfolio-2026/)
 
 ---
 
@@ -65,7 +65,7 @@ Simply open the `index.html` file directly in your preferred web browser, or lau
 ## 🤝 Connect With Me
 
 * **GitHub:** [@JafarSareef](https://www.google.com/search?q=https://github.com/JafarSareef)
-* **LinkedIn:** [Your LinkedIn Profile Link Here]
+* **LinkedIn:** [https://www.linkedin.com/in/JafarSareef]
 * **Email:** [a.jafarsareef10@gmail.com]
 
 ```
