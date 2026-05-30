@@ -467,19 +467,23 @@ const myProjects = [
     ],
   },
   {
-   title: "Personal Portfolio & Digital Ecosystem",
+    title: "Personal Portfolio & Digital Ecosystem",
     category: "Front-End Engineering",
-    image: "Portfolio.jpeg", // 💻 Take a screenshot of your homepage and save it here!
+    image: "Portfolio.png", // 💻 Take a screenshot of your homepage and save it here!
     summary:
       "Architected and engineered a fully responsive, semantic digital portfolio platform. Features high-performance dynamic components parsed entirely through modern vanilla JavaScript engines, integrated structural component mapping layouts, and clean utility styling overrides using Tailwind CSS canvas parameters.",
-    githubLink: "https://github.com/JafarSareef/Portfolio", // 🔗 Swap with your repository link if available
-    liveLink: "https://jafarsareef.github.io/Portfolio", // 🔗 Swap with your GitHub Pages URL or live URL
+    githubLink: "https://github.com/JafarSareef/Portfolio-2026", // 🔗 Swap with your repository link if available
+    liveLink: "https://jafarsareef.github.io/Portfolio-2026/", // 🔗 Swap with your GitHub Pages URL or live URL
     tools: [
       { type: "icon", class: "fab fa-html5 text-orange-500", title: "HTML5" },
       { type: "icon", class: "fab fa-css3-alt text-blue-500", title: "CSS3" },
-      { type: "icon", class: "fab fa-js-square text-yellow-500", title: "JavaScript" },
+      {
+        type: "icon",
+        class: "fab fa-js-square text-yellow-500",
+        title: "JavaScript",
+      },
       // Custom text badge specifically spotlighting your framework-less styling engine
-      { type: "badge", label: "Tailwind CSS v4" }
+      { type: "badge", label: "Tailwind CSS v4" },
     ],
   },
 ];
@@ -559,3 +563,65 @@ document.addEventListener("DOMContentLoaded", () => {
       .join("");
   }
 });
+
+// A. MOBILE MENU TOGGLE LOGIC (Refined Animation Engine)
+const menuBtn = document.getElementById("menu-btn");
+const mobileMenu = document.getElementById("mobile-menu");
+const menuIcon = document.getElementById("menu-icon");
+const mobileLinks = document.querySelectorAll(".mobile-link");
+let isMenuOpen = false;
+
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    isMenuOpen = !isMenuOpen;
+
+    if (isMenuOpen) {
+      // Remove hiding classes, slide down, and make clickable
+      mobileMenu.classList.remove(
+        "-translate-y-full",
+        "opacity-0",
+        "pointer-events-none",
+      );
+      mobileMenu.classList.add(
+        "translate-y-0",
+        "opacity-100",
+        "pointer-events-auto",
+      );
+      // Turn hamburger into an 'X' icon
+      menuIcon.setAttribute("d", "M6 18L18 6M6 6l12 12");
+    } else {
+      // Slide up, fade out, and disable clicks
+      mobileMenu.classList.remove(
+        "translate-y-0",
+        "opacity-100",
+        "pointer-events-auto",
+      );
+      mobileMenu.classList.add(
+        "-translate-y-full",
+        "opacity-0",
+        "pointer-events-none",
+      );
+      // Reset back to hamburger icon
+      menuIcon.setAttribute("d", "M4 6h16M4 12h16M4 18h16");
+    }
+  });
+
+  // Close the menu automatically when any section link inside it is clicked
+  mobileLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      isMenuOpen = false;
+      mobileMenu.classList.remove(
+        "translate-y-0",
+        "opacity-100",
+        "pointer-events-auto",
+      );
+      mobileMenu.classList.add(
+        "-translate-y-full",
+        "opacity-0",
+        "pointer-events-none",
+      );
+      menuIcon.setAttribute("d", "M4 6h16M4 12h16M4 18h16");
+    });
+  });
+}
