@@ -4,7 +4,7 @@
 
 Welcome to the source repository for my professional engineering portfolio. This platform functions as a standalone production-grade web application, built to serve as a fast, high-performance, and responsive hub showcasing my digital footprint, analytics capabilities, and full-stack software development credentials.
 
-🔗 **Live Deployment:** [https://jafarsareef.github.io/Portfolio-2026/](https://jafarsareef.github.io/Portfolio-2026/)
+🔗 **Live Deployment:** [https://jafarsareef.github.io/portfolio/](https://jafarsareef.github.io/portfolio/)
 
 ---
 
