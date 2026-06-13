@@ -55,7 +55,7 @@ To clone and run this portfolio locally on your machine:
 
 1. **Clone the repository:**
    ```bash
-   git clone [https://github.com/JafarSareef/Portfolio-2026.git](https://github.com/JafarSareef/Portfolio-2026.git)
+   git clone [https://github.com/JafarSareef/portfolio.git](https://github.com/JafarSareef/portfolio.git)
 
 ```
 
@@ -76,7 +76,3 @@ Simply open the `index.html` file directly in your preferred web browser, or lau
 * **GitHub:** [@JafarSareef](https://www.google.com/search?q=https://github.com/JafarSareef)
 * **LinkedIn:** [https://www.linkedin.com/in/JafarSareef]
 * **Email:** [a.jafarsareef10@gmail.com]
-
-```
-
-
