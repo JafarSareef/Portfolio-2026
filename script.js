@@ -1,8 +1,8 @@
 // Initialize EmailJS Engine with your credentials
-// ⚙️ INSTRUCTION: Paste your real text token codes inside these variables!
 const PUBLIC_KEY = "P-y_YbuTh-AhUdku1";
-const SERVICE_ID = "serviceportfolio_10";
+const SERVICE_ID = "service_1010"; // ⚙️ Fixed: Kept uniform with your current active dashboard service
 const TEMPLATE_ID = "template_1010";
+const AutoTemplate_ID = "template_autoreply";
 
 (function () {
   if (PUBLIC_KEY !== "YOUR_PUBLIC_KEY") {
@@ -17,6 +17,7 @@ const titleText = "Front-End Developer";
 function runTypewriter(elementId, text, speed, callback) {
   let index = 0;
   const element = document.getElementById(elementId);
+  if (!element) return;
   element.classList.add("typewriter-caret");
 
   function type() {
@@ -29,7 +30,6 @@ function runTypewriter(elementId, text, speed, callback) {
         element.classList.remove("typewriter-caret");
         callback();
       }
-      // Title text container keeps 'typewriter-caret' forever to blink indefinitely
     }
   }
   type();
@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // --- 2. MULTI-SYSTEM RESPONSIVE LOG BACKGROUND CANVAS ---
 function initTechCanvas() {
   const canvas = document.getElementById("tech-canvas");
+  if (!canvas) return;
   const ctx = canvas.getContext("2d");
 
   let fontSize = 11;
@@ -54,7 +55,6 @@ function initTechCanvas() {
   let drops = [];
   let assignedWords = [];
 
-  // Technical background data pools (Hiding Data Analytics & DevOps subtly)
   const techPool = [
     "ERROR: Code-404",
     "SYS_HALT",
@@ -76,7 +76,6 @@ function initTechCanvas() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    // Adapt column grid width according to device profile system
     const columnWidth = window.innerWidth < 640 ? 90 : 140;
     columns = Math.floor(canvas.width / columnWidth);
 
@@ -103,22 +102,21 @@ function initTechCanvas() {
       const x = i * spacingX + 10;
       const y = drops[i] * fontSize;
 
-      // Strict rendering colour matches
       if (
         text.includes("ERROR") ||
         text.includes("404") ||
         text.includes("HALT")
       ) {
-        ctx.fillStyle = "rgba(16, 185, 129, 0.12)"; // Soft, dimmed light green for errors
+        ctx.fillStyle = "rgba(16, 185, 129, 0.12)";
       } else if (
         text.includes("SQL") ||
         text.includes("PYTHON") ||
         text.includes("DEVOPS") ||
         text.includes("BI")
       ) {
-        ctx.fillStyle = "rgba(100, 116, 139, 0.14)"; // Muted tech-oriented light gray logs
+        ctx.fillStyle = "rgba(100, 116, 139, 0.14)";
       } else {
-        ctx.fillStyle = "rgba(16, 185, 129, 0.18)"; // Standard running metrics code stream
+        ctx.fillStyle = "rgba(16, 185, 129, 0.18)";
       }
 
       ctx.fillText(text, x, y);
@@ -136,9 +134,9 @@ function initTechCanvas() {
 }
 
 // --- 3. EMAILJS FORM HANDLING ---
-document
-  .getElementById("contact-form")
-  .addEventListener("submit", function (event) {
+const contactForm = document.getElementById("contact-form");
+if (contactForm) {
+  contactForm.addEventListener("submit", function (event) {
     event.preventDefault();
 
     const btn = document.getElementById("submit-btn");
@@ -196,38 +194,56 @@ document
       email_icon_url: emailIconUrl,
     };
 
-    emailjs.send(SERVICE_ID, TEMPLATE_ID, templateParams).then(
-      (response) => {
-        // added 'response' parameter here
-        console.log("EmailJS Server Response:", response.status, response.text); // Debug log
+    // Step 1: Send Notification Alert to Jafar
+    emailjs
+      .send(SERVICE_ID, TEMPLATE_ID, templateParams)
+      .then((response) => {
+        console.log(
+          "✓ Main Notification Sent:",
+          response.status,
+          response.text,
+        );
+
+        // Step 2: Send Auto-Reply Receipt back to User
+        return emailjs.send(SERVICE_ID, AutoTemplate_ID, templateParams);
+      })
+      .then((autoReplyResponse) => {
+        console.log(
+          "✓ Auto-Reply Sent:",
+          autoReplyResponse.status,
+          autoReplyResponse.text,
+        );
+
+        // UI Success Handling
         btn.innerText = "Submit Message";
         btn.disabled = false;
         statusBox.classList.remove("hidden", "text-red-500");
         statusBox.classList.add("text-green-600");
         statusBox.innerText =
           "✓ Awesome! Your message was sent successfully to Jafar.";
-        document.getElementById("contact-form").reset();
-      },
-      (err) => {
+        contactForm.reset();
+      })
+      .catch((err) => {
         btn.innerText = "Submit Message";
         btn.disabled = false;
         statusBox.classList.remove("hidden", "text-green-600");
         statusBox.classList.add("text-red-500");
-        statusBox.innerText =
-          "✕ Oops! Something went wrong. Check connection metrics.";
-        console.error(err);
-      },
-    );
+
+        // Advanced explicit message decoding from EmailJS server
+        const errorDetails = err?.text || err?.message || JSON.stringify(err);
+        statusBox.innerText = `✕ Oops! Server Rejected Request (${errorDetails}).`;
+        console.error("Detailed EmailJS Fault Stream:", err);
+      });
   });
+}
 
-// --- DYNAMIC CERTIFICATIONS & WORKSHOPS LOGIC ---
-
+// --- 4. DYNAMIC CERTIFICATIONS & WORKSHOPS DATA ARRAY ---
 const verifiedCertificates = [
   {
     title: "Data Analytics Certification",
     issuer: "LinkedIn Learning",
-    image: "images/Data Analytics Linkedin Learning.jpg", // 💻 Replace with your local filename
-    link: "https://github.com/JafarSareef/Verified_Certificates/blob/main/Data%20Analytics%20Linkedin%20Learning.pdf", // 🔗 Paste your GitHub Raw or Drive link here
+    image: "images/Data Analytics Linkedin Learning.jpg",
+    link: "https://github.com/JafarSareef/Verified_Certificates/blob/main/Data%20Analytics%20Linkedin%20Learning.pdf",
     summary:
       "Mastered the fundamental phases of data analysis, including data cleansing, visual pattern discovery, and insight generation using Excel and Power BI.",
   },
@@ -299,7 +315,6 @@ const verifiedCertificates = [
     title: "Artificial Intelligence Internship",
     issuer: "Novitech",
     image: "images/AI_Internship_NoviTech.jpg",
-    // 🎯 UPDATED TO THE RAW PREVIEW LINK BELOW
     link: "https://github.com/JafarSareef/Verified_Certificates/raw/main/Artificial_Intelligence_Internship_NoviTech.pdf",
     summary:
       "Acquired real-world experience building baseline predictive engines, evaluating machine intelligence layers, and exploring data architectures.",
@@ -326,8 +341,8 @@ const workshopAccolades = [
   {
     title: "Generative AI Application Lab",
     tag: "OutSkill Workshop",
-    image: "images/OutSkill Gen AI.jpg", // 💻 Replace with your local filename
-    link: "https://github.com/JafarSareef/Verified_Certificates/blob/main/OutSkill%20Gen%20AI.pdf", // 🔗 Paste your GitHub Raw or Drive link here
+    image: "images/OutSkill Gen AI.jpg",
+    link: "https://github.com/JafarSareef/Verified_Certificates/blob/main/OutSkill%20Gen%20AI.pdf",
     summary:
       "Investigated modern generative platform nodes, prompt engineering workflows, and system integration strategies for automated workflows.",
   },
@@ -357,7 +372,7 @@ const workshopAccolades = [
   },
 ];
 
-// Dynamic Rendering Engine for Horizontal Carousel System
+// --- 5. DOM INJECTION LOOP FOR CAROUSELS ---
 document.addEventListener("DOMContentLoaded", () => {
   const verifiedContainer = document.getElementById(
     "verified-credentials-container",
@@ -366,67 +381,65 @@ document.addEventListener("DOMContentLoaded", () => {
     "workshop-accolades-container",
   );
 
-  // 1. Render Upper Verified Credentials
   if (verifiedContainer) {
     verifiedContainer.innerHTML = verifiedCertificates
       .map(
         (cert) => `
-            <div class="w-full max-w-xl flex-shrink-0 snap-start bg-slate-50 border border-slate-100 p-6 rounded-3xl flex flex-col justify-between shadow-md hover:shadow-xl transition-all duration-300">
-                <div class="space-y-4">
-                    <div class="w-full rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-inner group">
-                        <img src="${cert.image}" alt="${cert.title}" class="w-full h-auto object-contain max-h-[400px] mx-auto group-hover:scale-[1.02] transition-transform duration-500">
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-                        <h4 class="font-extrabold text-base sm:text-lg text-slate-900 leading-snug">${cert.title}</h4>
-                        <p class="text-[11px] font-bold text-blue-600 uppercase tracking-wider mt-1">${cert.issuer}</p>
-                        <p class="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-medium border-t border-slate-50 pt-2">${cert.summary}</p>
-                    </div>
+        <div class="w-full max-w-xl flex-shrink-0 snap-start bg-slate-50 border border-slate-100 p-6 rounded-3xl flex flex-col justify-between shadow-md hover:shadow-xl transition-all duration-300">
+            <div class="space-y-4">
+                <div class="w-full rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-inner group">
+                    <img src="${cert.image}" alt="${cert.title}" class="w-full h-auto object-contain max-h-[400px] mx-auto group-hover:scale-[1.02] transition-transform duration-500">
                 </div>
-                <div class="mt-6 pt-3 border-t border-slate-200/60 flex justify-end">
-                    <a href="${cert.link}" target="_blank" class="inline-flex items-center space-x-2 text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2 rounded-full transition-colors">
-                        <span>Verify Credentials</span> <i class="fas fa-external-link-alt text-[10px]"></i>
-                    </a>
+                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <h4 class="font-extrabold text-base sm:text-lg text-slate-900 leading-snug">${cert.title}</h4>
+                    <p class="text-[11px] font-bold text-blue-600 uppercase tracking-wider mt-1">${cert.issuer}</p>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-medium border-t border-slate-50 pt-2">${cert.summary}</p>
                 </div>
             </div>
-        `,
+            <div class="mt-6 pt-3 border-t border-slate-200/60 flex justify-end">
+                <a href="${cert.link}" target="_blank" class="inline-flex items-center space-x-2 text-xs sm:text-sm font-bold text-blue-600 hover:text-blue-700 bg-blue-50 px-4 py-2 rounded-full transition-colors">
+                    <span>Verify Credentials</span> <i class="fas fa-external-link-alt text-[10px]"></i>
+                </a>
+            </div>
+        </div>
+      `,
       )
       .join("");
   }
 
-  // 2. Render Lower Workshop Accolades
   if (workshopContainer) {
     workshopContainer.innerHTML = workshopAccolades
       .map(
         (work) => `
-            <div class="w-full max-w-xl flex-shrink-0 snap-start bg-slate-50 border border-slate-100 p-6 rounded-3xl flex flex-col justify-between shadow-md hover:shadow-xl transition-all duration-300">
-                <div class="space-y-4">
-                    <div class="w-full rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-inner group">
-                        <img src="${work.image}" alt="${work.title}" class="w-full h-auto object-contain max-h-[400px] mx-auto group-hover:scale-[1.02] transition-transform duration-500">
-                    </div>
-                    <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
-                        <h4 class="font-extrabold text-base sm:text-lg text-slate-900 leading-snug">${work.title}</h4>
-                        <p class="text-[11px] font-bold text-amber-600 uppercase tracking-wider mt-1">${work.tag}</p>
-                        <p class="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-medium border-t border-slate-50 pt-2">${work.summary}</p>
-                    </div>
+        <div class="w-full max-w-xl flex-shrink-0 snap-start bg-slate-50 border border-slate-100 p-6 rounded-3xl flex flex-col justify-between shadow-md hover:shadow-xl transition-all duration-300">
+            <div class="space-y-4">
+                <div class="w-full rounded-2xl overflow-hidden bg-white border border-slate-200 shadow-inner group">
+                    <img src="${work.image}" alt="${work.title}" class="w-full h-auto object-contain max-h-[400px] mx-auto group-hover:scale-[1.02] transition-transform duration-500">
                 </div>
-                <div class="mt-6 pt-3 border-t border-slate-200/60 flex justify-end">
-                    <a href="${work.link}" target="_blank" class="inline-flex items-center space-x-2 text-xs sm:text-sm font-bold text-amber-600 hover:text-amber-700 bg-amber-50 px-4 py-2 rounded-full transition-colors">
-                        <span>View Credentials</span> <i class="fas fa-external-link-alt text-[10px]"></i>
-                    </a>
+                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+                    <h4 class="font-extrabold text-base sm:text-lg text-slate-900 leading-snug">${work.title}</h4>
+                    <p class="text-[11px] font-bold text-amber-600 uppercase tracking-wider mt-1">${work.tag}</p>
+                    <p class="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed font-medium border-t border-slate-50 pt-2">${work.summary}</p>
                 </div>
             </div>
-        `,
+            <div class="mt-6 pt-3 border-t border-slate-200/60 flex justify-end">
+                <a href="${work.link}" target="_blank" class="inline-flex items-center space-x-2 text-xs sm:text-sm font-bold text-amber-600 hover:text-amber-700 bg-amber-50 px-4 py-2 rounded-full transition-colors">
+                    <span>View Credentials</span> <i class="fas fa-external-link-alt text-[10px]"></i>
+                </a>
+            </div>
+        </div>
+      `,
       )
       .join("");
   }
 });
 
-// --- DYNAMIC PROJECTS INVENTORY CONFIGURATION ---
+// --- 6. DYNAMIC PROJECTS INVENTORY CONFIGURATION ---
 const myProjects = [
   {
     title: "SmartHire: AI-Powered Virtual Job Interview Simulator",
     category: "Artificial Intelligence & Front-End",
-    image: "SmartHire Project.png", // Added images/ folder prefix just in case
+    image: "SmartHire Project.png",
     summary:
       "Awarded 2nd prize at the National Conference. Engineered a smart simulation engine powered by Python, Node.js, and Google AI Studio APIs. Features automated PDF document extraction via PyPDF, real-time Speech-to-Text conversion modules, and an optimized, fully structured React JS user interface context layout.",
     githubLink: "https://github.com/JafarSareef/SmartHire-AI-Interview---FYP",
@@ -444,7 +457,7 @@ const myProjects = [
         class: "fab fa-js-square text-yellow-500",
         title: "JavaScript",
       },
-      { type: "svg", name: "python", title: "Python" }, // Custom Vector Native Fix
+      { type: "svg", name: "python", title: "Python" },
       { type: "badge", label: "Google AI Studio API" },
       { type: "badge", label: "PyPDF" },
       { type: "badge", label: "Speech-to-AI" },
@@ -460,7 +473,6 @@ const myProjects = [
       "https://github.com/JafarSareef/Simplilearn-Data-Analystics-Projects",
     liveLink:
       "https://www.linkedin.com/posts/jafarsareef_dataanalytics-powerbi-tableau-ugcPost-7427112753091411969-upxX?utm_source=share&utm_medium=member_desktop&rcm=ACoAADxCrWsBLBf0eBw16KDjd0Eysh0Z9SO1acs",
-    // Configured the tools explicitly here to match your architecture blueprint!
     tools: [
       { type: "svg", name: "powerbi", title: "Power BI" },
       { type: "svg", name: "tableau", title: "Tableau" },
@@ -470,11 +482,11 @@ const myProjects = [
   {
     title: "Personal Portfolio & Digital Ecosystem",
     category: "Front-End Engineering",
-    image: "Portfolio.png", // 💻 Take a screenshot of your homepage and save it here!
+    image: "Portfolio.png",
     summary:
       "Architected and engineered a fully responsive, semantic digital portfolio platform. Features high-performance dynamic components parsed entirely through modern vanilla JavaScript engines, integrated structural component mapping layouts, and clean utility styling overrides using Tailwind CSS canvas parameters.",
-    githubLink: "https://github.com/JafarSareef/Portfolio-2026", // 🔗 Swap with your repository link if available
-    liveLink: "https://jafarsareef.github.io/Portfolio-2026/", // 🔗 Swap with your GitHub Pages URL or live URL
+    githubLink: "https://github.com/JafarSareef/Portfolio-2026",
+    liveLink: "https://jafarsareef.github.io/Portfolio-2026/",
     tools: [
       { type: "icon", class: "fab fa-html5 text-orange-500", title: "HTML5" },
       { type: "icon", class: "fab fa-css3-alt text-blue-500", title: "CSS3" },
@@ -483,7 +495,6 @@ const myProjects = [
         class: "fab fa-js-square text-yellow-500",
         title: "JavaScript",
       },
-      // Custom text badge specifically spotlighting your framework-less styling engine
       { type: "badge", label: "Tailwind CSS v4" },
     ],
   },
@@ -492,80 +503,68 @@ const myProjects = [
 // Projects Engine Injection Loop
 document.addEventListener("DOMContentLoaded", () => {
   const projectsContainer = document.getElementById("projects-mesh-container");
+  if (!projectsContainer) return;
 
-  if (projectsContainer) {
-    projectsContainer.innerHTML = myProjects
-      .map((project) => {
-        // 🛠️ FIXED: Map the tools array dynamically instead of using the hardcoded true/false condition
-        const techStackIcons = Array.isArray(project.tools)
-          ? project.tools
-              .map((tool) => {
-                // 1. Standard Font Awesome Icons
-                if (tool.type === "icon") {
-                  return `<i class="${tool.class} transition-transform hover:scale-110" title="${tool.title}"></i>`;
+  projectsContainer.innerHTML = myProjects
+    .map((project) => {
+      const techStackIcons = Array.isArray(project.tools)
+        ? project.tools
+            .map((tool) => {
+              if (tool.type === "icon") {
+                return `<i class="${tool.class} transition-transform hover:scale-110" title="${tool.title}"></i>`;
+              }
+              if (tool.type === "badge") {
+                return `<span class="text-[10px] font-bold font-mono px-2 py-0.5 bg-slate-100 text-slate-600 rounded border border-slate-200 transition-colors hover:bg-slate-200/60">${tool.label}</span>`;
+              }
+              if (tool.type === "svg") {
+                if (tool.name === "python") {
+                  return `<div class="text-slate-400 hover:text-blue-500 transition-colors flex items-center" title="Python"><svg class="w-5 h-5 fill-current" viewBox="0 0 448 512"><path d="M439.4 153.8c0-83.2-68.7-142-151.8-142H160.3C77.2 11.8 8.5 70.6 8.5 153.8v78.2c0 26.5 21.5 48 48 48h48v32h-48c-26.5 0-48 21.5-48 48v78.2c0 83.2 68.7 142 151.8 142h127.3c83.2 0 151.8-58.8 151.8-142v-78.2c0-26.5-21.5-48-48-48h-48v-32h48c26.5 0 48-21.5 48-48v-78.2zm-279.4-46c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm208 288c-13.3 0-24-10.7-24-24s-10.7-24 24-24 24 10.7 24 24-10.7 24-24 24z"/></svg></div>`;
                 }
-
-                // 2. Custom Text Badges for Libraries/APIs (PyPDF, Speech-to-AI)
-                if (tool.type === "badge") {
-                  return `<span class="text-[10px] font-bold font-mono px-2 py-0.5 bg-slate-100 text-slate-600 rounded border border-slate-200 transition-colors hover:bg-slate-200/60">${tool.label}</span>`;
+                if (tool.name === "powerbi") {
+                  return `<div class="text-slate-400 hover:text-yellow-500 transition-colors flex items-center" title="Power BI"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M10.125 0H6.75v24h3.375zM16.875 6.75H13.5V24h3.375zM23.625 12.375H20.25V24h3.375zM3.375 15.75H0V24h3.375z"/></svg></div>`;
                 }
-
-                // 3. Native inline SVGs (Python, Power BI, Tableau, Excel)
-                if (tool.type === "svg") {
-                  if (tool.name === "python") {
-                    return `<div class="text-slate-400 hover:text-blue-500 transition-colors flex items-center" title="Python"><svg class="w-5 h-5 fill-current" viewBox="0 0 448 512"><path d="M439.4 153.8c0-83.2-68.7-142-151.8-142H160.3C77.2 11.8 8.5 70.6 8.5 153.8v78.2c0 26.5 21.5 48 48 48h48v32h-48c-26.5 0-48 21.5-48 48v78.2c0 83.2 68.7 142 151.8 142h127.3c83.2 0 151.8-58.8 151.8-142v-78.2c0-26.5-21.5-48-48-48h-48v-32h48c26.5 0 48-21.5 48-48v-78.2zm-279.4-46c13.3 0 24 10.7 24 24s-10.7 24-24 24-24-10.7-24-24 10.7-24 24-24zm208 288c-13.3 0-24-10.7-24-24s10.7-24 24-24 24 10.7 24 24-10.7 24-24 24z"/></svg></div>`;
-                  }
-                  if (tool.name === "powerbi") {
-                    return `<div class="text-slate-400 hover:text-yellow-500 transition-colors flex items-center" title="Power BI"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M10.125 0H6.75v24h3.375zM16.875 6.75H13.5V24h3.375zM23.625 12.375H20.25V24h3.375zM3.375 15.75H0V24h3.375z"/></svg></div>`;
-                  }
-                  if (tool.name === "tableau") {
-                    return `<div class="text-slate-400 hover:text-indigo-500 transition-colors flex items-center" title="Tableau"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2v20M2 12h20M12 6v12M6 12h12M12 9v6M9 12h6" /></svg></div>`;
-                  }
-                  if (tool.name === "excel") {
-                    return `<div class="text-slate-400 hover:text-green-600 transition-colors flex items-center" title="Microsoft Excel"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M23 1.5l-9 2v17l9 2v-21zm-10.5 4h8v2h-8v-2zm0 3.5h8v2h-8v-2zm0 3.5h8v2h-8v-2zm0 3.5h8v2h-8v-2zM1 5.5l10-2v17l-10-2v-13zm3.5 9.5l2-3 2 3h1.5l-2.75-4 2.75-4h-1.5l-2 3-2-3h-1.5l2.75 4-2.75 4h1.5z"/></svg></div>`;
-                  }
+                if (tool.name === "tableau") {
+                  return `<div class="text-slate-400 hover:text-indigo-500 transition-colors flex items-center" title="Tableau"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2v20M2 12h20M12 6v12M6 12h12M12 9v6M9 12h6" /></svg></div>`;
                 }
-                return "";
-              })
-              .join("")
-          : ""; // Fallback if tools array doesn't exist
+                if (tool.name === "excel") {
+                  return `<div class="text-slate-400 hover:text-green-600 transition-colors flex items-center" title="Microsoft Excel"><svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M23 1.5l-9 2v17l9 2v-21zm-10.5 4h8v2h-8v-2zm0 3.5h8v2h-8v-2zm0 3.5h8v2h-8v-2zm0 3.5h8v2h-8v-2zM1 5.5l10-2v17l-10-2v-13zm3.5 9.5l2-3 2 3h1.5l-2.75-4 2.75-4h-1.5l-2 3-2-3h-1.5l2.75 4-2.75 4h1.5z"/></svg></div>`;
+                }
+              }
+              return "";
+            })
+            .join("")
+        : "";
 
-        return `
-          <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
-              <div>
-                  <div class="aspect-[16/10] rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 mb-6 relative">
-                      <img src="${project.image}" alt="${project.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                  </div>
-
-                  <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full">${project.category}</span>
-                  
-                  <h3 class="font-extrabold text-lg text-slate-900 tracking-tight mt-3 mb-2 leading-snug group-hover:text-blue-600 transition-colors">${project.title}</h3>
-                  
-                  <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">${project.summary}</p>
-              </div>
-
-              <div>
-                  <div class="flex flex-wrap items-center gap-3 mb-6 text-slate-400 text-xl">
-                      ${techStackIcons}
-                  </div>
-
-                  <div class="flex items-center justify-between pt-4 border-t border-slate-100">
-                      <a href="${project.githubLink}" target="_blank" class="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center space-x-1.5 transition-colors">
-                          <i class="fab fa-github text-sm"></i> <span>Repository</span>
-                      </a>
-                      <a href="${project.liveLink}" target="_blank" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center space-x-1">
-                          <span>Live Prototype</span> <i class="fas fa-arrow-right text-[10px]"></i>
-                      </a>
-                  </div>
-              </div>
-          </div>
-        `;
-      })
-      .join("");
-  }
+      return `
+        <div class="bg-white border border-slate-100 rounded-3xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between group">
+            <div>
+                <div class="aspect-[16/10] rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 mb-6 relative">
+                    <img src="${project.image}" alt="${project.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                </div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-blue-600 bg-blue-50 px-3 py-1 rounded-full">${project.category}</span>
+                <h3 class="font-extrabold text-lg text-slate-900 tracking-tight mt-3 mb-2 leading-snug group-hover:text-blue-600 transition-colors">${project.title}</h3>
+                <p class="text-xs sm:text-sm text-slate-600 leading-relaxed mb-6">${project.summary}</p>
+            </div>
+            <div>
+                <div class="flex flex-wrap items-center gap-3 mb-6 text-slate-400 text-xl">
+                    ${techStackIcons}
+                </div>
+                <div class="flex items-center justify-between pt-4 border-t border-slate-100">
+                    <a href="${project.githubLink}" target="_blank" class="text-xs font-bold text-slate-500 hover:text-slate-900 flex items-center space-x-1.5 transition-colors">
+                        <i class="fab fa-github text-sm"></i> <span>Repository</span>
+                    </a>
+                    <a href="${project.liveLink}" target="_blank" class="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center space-x-1">
+                        <span>Live Prototype</span> <i class="fas fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+      `;
+    })
+    .join("");
 });
 
-// A. MOBILE MENU TOGGLE LOGIC (Refined Animation Engine)
+// --- 7. MOBILE MENU TOGGLE LOGIC ---
 const menuBtn = document.getElementById("menu-btn");
 const mobileMenu = document.getElementById("mobile-menu");
 const menuIcon = document.getElementById("menu-icon");
@@ -578,7 +577,6 @@ if (menuBtn && mobileMenu) {
     isMenuOpen = !isMenuOpen;
 
     if (isMenuOpen) {
-      // Remove hiding classes, slide down, and make clickable
       mobileMenu.classList.remove(
         "-translate-y-full",
         "opacity-0",
@@ -589,10 +587,8 @@ if (menuBtn && mobileMenu) {
         "opacity-100",
         "pointer-events-auto",
       );
-      // Turn hamburger into an 'X' icon
       menuIcon.setAttribute("d", "M6 18L18 6M6 6l12 12");
     } else {
-      // Slide up, fade out, and disable clicks
       mobileMenu.classList.remove(
         "translate-y-0",
         "opacity-100",
@@ -603,12 +599,10 @@ if (menuBtn && mobileMenu) {
         "opacity-0",
         "pointer-events-none",
       );
-      // Reset back to hamburger icon
       menuIcon.setAttribute("d", "M4 6h16M4 12h16M4 18h16");
     }
   });
 
-  // Close the menu automatically when any section link inside it is clicked
   mobileLinks.forEach((link) => {
     link.addEventListener("click", () => {
       isMenuOpen = false;
@@ -627,11 +621,7 @@ if (menuBtn && mobileMenu) {
   });
 }
 
-// ... Your existing portfolio project arrays, dark mode, or canvas code is up here ...
-
-// =========================================================================
-// 🚀 PASTE THIS EXACTLY ONE TIME AT THE VERY BOTTOM OF YOUR SCRIPT.JS FILE
-// =========================================================================
+// --- 8. GLOBAL ANCHOR INTERCEPTOR FOR EXTERNAL LINKS ---
 document.addEventListener("click", (e) => {
   const link = e.target.closest("a");
   if (link && link.href) {
